@@ -70,16 +70,22 @@ Untuk mendeteksi sebuah SYN flood kita bisa menggunakan Wireshark dan melihat ci
 >Diskusikan teknik mitigasi umum: SYN cookies, backlog tuning, filtering, firewall/proxy, dan sebagainya.
 
 - meningkatkan Backlog queue
+
 Setiap sistem operasi pada perangkat yang ditargetkan memiliki sejumlah koneksi setengah terbuka yang memungkinkannya. Salah satu respons terhadap paket SYN bervolume tinggi adalah dengan meningkatkan jumlah maksimum kemungkinan koneksi setengah terbuka yang dimungkinkan oleh sistem operasi. Agar berhasil meningkatkan simpanan maksimum, sistem harus mencadangkan sumber daya memori tambahan untuk menangani semua permintaan baru. Jika sistem tidak memiliki memori yang cukup untuk dapat menangani peningkatan ukuran antrian backlog, kinerja sistem akan terkena dampak negatif, namun hal ini mungkin lebih baik daripada penolakan layanan.
 - Recycling the Oldest Half-Open TCP connection
+
 Strategi mitigasi lainnya melibatkan penimpaan koneksi setengah terbuka tertua setelah simpanan terisi. Strategi ini mengharuskan koneksi yang sah dapat dibuat sepenuhnya dalam waktu yang lebih singkat dibandingkan backlog yang dapat diisi dengan paket SYN berbahaya. Pertahanan khusus ini gagal ketika volume serangan ditingkatkan, atau jika ukuran simpanan terlalu kecil untuk praktis.
 - SYN cookies
+
 Strategi ini melibatkan pembuatan cookie oleh server. Untuk menghindari risiko putusnya koneksi ketika backlog telah terisi, server merespons setiap permintaan koneksi dengan paket SYN-ACK tetapi kemudian menghapus permintaan SYN dari backlog, menghapus permintaan dari memori dan membiarkan port terbuka dan siap membuat koneksi baru. Jika koneksi adalah permintaan yang sah, dan paket ACK akhir dikirim dari mesin klien kembali ke server, server kemudian akan merekonstruksi (dengan beberapa batasan) entri antrian backlog SYN. Sementara upaya mitigasi ini memang kehilangan beberapa informasi tentang koneksi TCP, itu lebih baik daripada membiarkan penolakan-layanan terjadi pada pengguna yang sah sebagai akibat dari serangan.
 - Konfigurasi Firewall untuk SYN Attack Treshold dan Perlindungan SYN Flood
+
 Firewall dapat dikonfigurasi untuk membatasi lalu lintas masuk dan memblokir koneksi dari alamat IP berbahaya yang mencurigakan atau diketahui. Mereka juga dapat diatur untuk mengurangi batas waktu untuk koneksi setengah terbuka, yang dapat membantu mengurangi dampak serangan SYN Flood.
 - Menginstal Intrusion Prevention System (IPS)
+
 Sebuah IPS dapat mendeteksi pola lalu lintas anomali dan memblokir paket berbahaya1. Ini garis pertahanan pertama Anda melawan serangan SYN Flood. Misalnya, jika IPS mendeteksi lonjakan permintaan SYN secara tiba-tiba dari satu alamat IP, hal ini dapat mengindikasikan serangan SYN Flood dan IPS dapat memblokir permintaan lebih lanjut dari alamat IP tersebut.
 - Memasang Peralatan Jaringan Terkini dengan Kemampuan Rate-Limiting
+
 Peralatan jaringan modern sering kali dilengkapi dengan kemampuan pembatas kecepatan bawaan. Hal ini dapat membantu mencegah serangan SYN Flood dengan membatasi jumlah permintaan SYN yang akan diterima server dari satu alamat IP dalam jangka waktu tertentu.
 ## Source
 1. [SYN Flooding Tutorial](https://www.firewall.cx/tools-tips-reviews/network-protocol-analyzers/performing-tcp-syn-flood-attack-and-detecting-it-with-wireshark.html)
